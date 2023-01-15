@@ -1,6 +1,6 @@
-import { StyleSheet, TextInput, ToastAndroid, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import { useState, useContext } from "react";
-import { WordleContext } from "../App";
+import { WordleContext } from "../screens/Game";
 
 const Cell = ({
   setFilled,
@@ -24,6 +24,9 @@ const Cell = ({
         style={{ ...styles.cell, backgroundColor: color }}
         value={value}
         onChangeText={(text) => {
+          if (innerRef.current) {
+            innerRef.current.value = text;
+          }
           if (text && text.length > 0) {
             setFilled(index, true);
             if (index < 4) cellRefs[index + 1].current.focus();
@@ -49,8 +52,6 @@ const styles = StyleSheet.create({
     color: "white",
     width: 60,
     textAlign: "center",
-
-
     borderRadius: 50,
     marginHorizontal: 2,
   },

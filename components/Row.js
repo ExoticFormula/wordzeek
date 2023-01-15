@@ -1,26 +1,28 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import { StyleSheet, View, Text, ToastAndroid } from "react-native";
+import { WordleContext } from "../screens/Game";
 import Cell from "./Cell";
-import { WordleContext } from "../App";
+
 const Row = ({ rowNo }) => {
   const [currentWord, setCurrentWord] = useState(null);
   const data = useContext(WordleContext);
   const correctWord = data.word;
   const setActiveRowIndex = data.setActiveRowIndex;
   const activeRowIndex = data.activeRowIndex;
-  useEffect(() => {
-    if (rowNo === activeRowIndex) cellRefs[0].current.focus();
-  }, [activeRowIndex]);
 
-  const showToast = () => {
-    ToastAndroid.show("Row filled !", ToastAndroid.SHORT);
+  // jumping to next row not wokring as expected
+  // useEffect(() => {
+  //   if (rowNo === activeRowIndex) cellRefs[0].current.focus();
+  // }, [activeRowIndex]);
+
+  const showToast = (text) => {
+    ToastAndroid.show(text, ToastAndroid.SHORT);
   };
 
   const updateCellColor = (newColors) => {
     const updatedCellStates = cellStates.map((cell, index) => {
       return { ...cell, color: newColors[index] };
     });
-    console.log(updatedCellStates);
     setCellStates(updatedCellStates);
   };
 
@@ -35,7 +37,7 @@ const Row = ({ rowNo }) => {
       } else newColors.push("#3C373D");
 
       const isCorrect = newColors.every((color) => color === "#6A9948");
-      if (isCorrect) console.log("You Won!");
+      if (isCorrect) showToast("You Won!");
       updateCellColor(newColors);
     }
   };
@@ -81,7 +83,6 @@ const Row = ({ rowNo }) => {
 
       if (rowFilled) {
         setRowFilled(true);
-        //   showToast("Row filled");
         setActiveRowIndex(rowNo + 1);
         let word = "";
         setCurrentWord(word);
@@ -89,7 +90,8 @@ const Row = ({ rowNo }) => {
         cellRefs.forEach((cellRef) => {
           word += cellRef.current.value;
         });
-        compareWords(word);
+
+        compareWords(word.toLowerCase());
       }
     }
   }, [cellStates]);
@@ -102,7 +104,6 @@ const Row = ({ rowNo }) => {
   };
   return (
     <View style={styles.row}>
-      <Text style={styles.rowNo}>{rowNo}</Text>
       {cellStates.map((cell, index) => {
         return (
           <Cell
