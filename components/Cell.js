@@ -1,17 +1,27 @@
 import { StyleSheet, TextInput, ToastAndroid, View } from "react-native";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { WordleContext } from "../App";
 
-const Cell = ({ setFilled, index, innerRef, cellRefs, rowFilled }) => {
+const Cell = ({
+  setFilled,
+  index,
+  innerRef,
+  cellRefs,
+  rowFilled,
+  rowNo,
+  color,
+}) => {
   const [value, setValue] = useState("");
-
+  const data = useContext(WordleContext);
+  const activeRowIndex = data.activeRowIndex;
   return (
     <View>
       <TextInput
-        editable={!rowFilled}
-        selectTextOnFocus={!rowFilled}
+        editable={!rowFilled && rowNo === activeRowIndex}
+        selectTextOnFocus={!rowFilled && rowNo === activeRowIndex}
         maxLength={1}
         ref={innerRef}
-        style={styles.cell}
+        style={{ ...styles.cell, backgroundColor: color }}
         value={value}
         onChangeText={(text) => {
           if (text && text.length > 0) {
@@ -38,10 +48,9 @@ const styles = StyleSheet.create({
     outlineStyle: "none",
     color: "white",
     width: 60,
-    backgroundColor: "#00695C",
     textAlign: "center",
 
-    // backgroundColor: "#6A9948",
+
     borderRadius: 50,
     marginHorizontal: 2,
   },

@@ -16,6 +16,29 @@ const Row = ({ rowNo }) => {
     ToastAndroid.show("Row filled !", ToastAndroid.SHORT);
   };
 
+  const updateCellColor = (newColors) => {
+    const updatedCellStates = cellStates.map((cell, index) => {
+      return { ...cell, color: newColors[index] };
+    });
+    console.log(updatedCellStates);
+    setCellStates(updatedCellStates);
+  };
+
+  const compareWords = (currentWord) => {
+    const newColors = [];
+
+    for (let i = 0; i <= 4; i++) {
+      if (currentWord[i] === correctWord[i]) {
+        newColors.push("#6A9948");
+      } else if (correctWord.includes(currentWord[i])) {
+        newColors.push("#6860A2");
+      } else newColors.push("#3C373D");
+
+      const isCorrect = newColors.every((color) => color === "#6A9948");
+      if (isCorrect) console.log("You Won!");
+      updateCellColor(newColors);
+    }
+  };
   const [rowFilled, setRowFilled] = useState(false);
   const cellRefs = [
     useRef(null),
@@ -28,37 +51,46 @@ const Row = ({ rowNo }) => {
     {
       index: 0,
       filled: false,
+      color: "#00695C",
     },
     {
       index: 1,
       filled: false,
+      color: "#00695C",
     },
     {
       index: 2,
       filled: false,
+      color: "#00695C",
     },
     {
       index: 3,
       filled: false,
+      color: "#00695C",
     },
     {
       index: 4,
       filled: false,
+      color: "#00695C",
     },
   ]);
 
   useEffect(() => {
-    const rowFilled = cellStates.every((cell) => cell.filled);
+    if (!rowFilled) {
+      const rowFilled = cellStates.every((cell) => cell.filled);
 
-    if (rowFilled) {
-      setRowFilled(true);
-      //   showToast("Row filled");
-      setActiveRowIndex(rowNo + 1);
-      let word = "";
-      cellRefs.forEach((cellRef) => {
-        word += cellRef.current.value;
-      });
-      setCurrentWord(word)
+      if (rowFilled) {
+        setRowFilled(true);
+        //   showToast("Row filled");
+        setActiveRowIndex(rowNo + 1);
+        let word = "";
+        setCurrentWord(word);
+
+        cellRefs.forEach((cellRef) => {
+          word += cellRef.current.value;
+        });
+        compareWords(word);
+      }
     }
   }, [cellStates]);
   const setFilled = (index, filled) => {
@@ -71,7 +103,7 @@ const Row = ({ rowNo }) => {
   return (
     <View style={styles.row}>
       <Text style={styles.rowNo}>{rowNo}</Text>
-      {[...Array(5)].map((_, index) => {
+      {cellStates.map((cell, index) => {
         return (
           <Cell
             rowFilled={rowFilled}
@@ -79,6 +111,7 @@ const Row = ({ rowNo }) => {
             cellRefs={cellRefs}
             setFilled={setFilled}
             key={index}
+            color={cell.color}
             index={index}
             rowNo={rowNo}
           ></Cell>

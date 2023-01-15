@@ -13,6 +13,7 @@ export default function App() {
       .get("https://random-word-api.herokuapp.com/word?length=5")
       .then(({ data }) => {
         setWord(data[0]);
+        console.log(data[0]);
       })
       .catch(() => {
         setWord(backupWords[Math.floor(Math.random() * 4)]);
@@ -29,7 +30,7 @@ export default function App() {
                 <Row
                   key={index}
                   activeRowIndex={activeRowIndex}
-                  rowNo={index + 1}
+                  rowNo={index}
                   setActiveRowIndex={setActiveRowIndex}
                 ></Row>
               );
