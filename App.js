@@ -1,29 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState, createContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Row from "./components/Row";
+import axios from "axios";
+const WordleContext = createContext();
+
 export default function App() {
   const [activeRowIndex, setActiveRowIndex] = useState(0);
-  const triggerNewRow = (rowIndex) => {};
+  const [word, setWord] = useState("");
+  const backupWords = ["pearl", "music", "movie"];
+  useEffect(() => {
+    axios
+      .get("https://random-word-api.herokuapp.com/word?length=5")
+      .then(({ data }) => {
+        setWord(data[0]);
+      })
+      .catch(() => {
+        setWord(backupWords[Math.floor(Math.random() * 4)]);
+      });
+  }, []);
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.container}>
-        <Text style={styles.title}>WORDZEEK</Text>
-        <View style={styles.grid}>
-          {[...Array(6)].map((_, index) => {
-            return (
-              <Row
-                key={index}
-                activeRowIndex={activeRowIndex}
-                rowNo={index + 1}
-                setActiveRowIndex={setActiveRowIndex}
-              ></Row>
-            );
-          })}
+    <WordleContext.Provider value={{ word, activeRowIndex, setActiveRowIndex }}>
+      <View style={styles.wrapper}>
+        <View style={styles.container}>
+          <Text style={styles.title}>WORDZEEK</Text>
+          <View style={styles.grid}>
+            {[...Array(6)].map((_, index) => {
+              return (
+                <Row
+                  key={index}
+                  activeRowIndex={activeRowIndex}
+                  rowNo={index + 1}
+                  setActiveRowIndex={setActiveRowIndex}
+                ></Row>
+              );
+            })}
+          </View>
         </View>
       </View>
-    </View>
+    </WordleContext.Provider>
   );
 }
+export { WordleContext };
 
 const styles = StyleSheet.create({
   wrapper: {

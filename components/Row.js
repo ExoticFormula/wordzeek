@@ -1,14 +1,21 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { StyleSheet, View, Text, ToastAndroid } from "react-native";
 import Cell from "./Cell";
-
-const Row = ({ rowNo, activeRowIndex, setActiveRowIndex }) => {
+import { WordleContext } from "../App";
+const Row = ({ rowNo }) => {
+  const [currentWord, setCurrentWord] = useState(null);
+  const data = useContext(WordleContext);
+  const correctWord = data.word;
+  const setActiveRowIndex = data.setActiveRowIndex;
+  const activeRowIndex = data.activeRowIndex;
   useEffect(() => {
     if (rowNo === activeRowIndex) cellRefs[0].current.focus();
   }, [activeRowIndex]);
+
   const showToast = () => {
     ToastAndroid.show("Row filled !", ToastAndroid.SHORT);
   };
+
   const [rowFilled, setRowFilled] = useState(false);
   const cellRefs = [
     useRef(null),
@@ -47,6 +54,11 @@ const Row = ({ rowNo, activeRowIndex, setActiveRowIndex }) => {
       setRowFilled(true);
       //   showToast("Row filled");
       setActiveRowIndex(rowNo + 1);
+      let word = "";
+      cellRefs.forEach((cellRef) => {
+        word += cellRef.current.value;
+      });
+      setCurrentWord(word)
     }
   }, [cellStates]);
   const setFilled = (index, filled) => {
