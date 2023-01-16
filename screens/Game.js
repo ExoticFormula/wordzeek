@@ -2,16 +2,12 @@ import { useEffect, useState, useContext } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import Row from "../components/Row";
 import axios from "axios";
-import { createContext } from "react";
-import { Audio } from "expo-av";
-import { GlobalContext } from "../App";
-const WordleContext = createContext();
 
 const Game = ({ navigation }) => {
   const [activeRowIndex, setActiveRowIndex] = useState(0);
   const [word, setWord] = useState("");
-  const data = useContext(GlobalContext);
   const backupWords = ["pearl", "music", "movie"];
+
   useEffect(() => {
     axios
       .get("https://random-word-api.herokuapp.com/word?length=5")
@@ -25,31 +21,30 @@ const Game = ({ navigation }) => {
   }, []);
 
   return (
-    <WordleContext.Provider value={{ word, activeRowIndex, setActiveRowIndex }}>
-      <View style={styles.wrapper}>
-        <View style={styles.container}>
-          <Text style={styles.title}>WORDZEEK</Text>
-          <View style={styles.grid}>
-            {[...Array(6)].map((_, index) => {
-              return (
-                <Row
-                  key={index}
-                  activeRowIndex={activeRowIndex}
-                  rowNo={index}
-                  setActiveRowIndex={setActiveRowIndex}
-                ></Row>
-              );
-            })}
-          </View>
+    <View style={styles.wrapper}>
+      <View style={styles.container}>
+        <Text style={styles.title}>WORDZEEK</Text>
+        <View style={styles.grid}>
+          {[...Array(6)].map((_, index) => {
+            return (
+              <Row
+                key={index}
+                word={word}
+                activeRowIndex={activeRowIndex}
+                rowNo={index}
+                setActiveRowIndex={setActiveRowIndex}
+              ></Row>
+            );
+          })}
         </View>
       </View>
-    </WordleContext.Provider>
+    </View>
   );
 };
+
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    // backgroundColor: "#251F26",
     backgroundColor: "#0D1860",
     alignItems: "center",
     justifyContent: "space-evenly",
@@ -73,4 +68,3 @@ const styles = StyleSheet.create({
 });
 
 export default Game;
-export { WordleContext };

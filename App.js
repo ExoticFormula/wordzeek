@@ -1,15 +1,15 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
-import EnterGame from "./screens/EnterGame";
+import { useEffect, useState, createContext } from "react";
+import Lobby from "./screens/Lobby";
 import Game from "./screens/Game";
 import Guide from "./screens/Guide";
-import { createContext } from "react";
 import { Audio } from "expo-av";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { Text } from "react-native";
-const GlobalContext = createContext();
+import { GlobalContext } from "./GlobalContext";
 const Stack = createNativeStackNavigator();
+
 export default function App() {
   const [musicOn, setMusicOn] = useState(false);
   const [sound, setSound] = useState();
@@ -45,6 +45,7 @@ export default function App() {
         }
       : undefined;
   }, [sound]);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -59,10 +60,10 @@ export default function App() {
           }}
         >
           <Stack.Screen
-            name="Enter Game"
-            component={EnterGame}
+            name="Lobby"
+            component={Lobby}
             options={{
-              title: "Enter Game",
+              title: "Lobby",
               headerShown: false,
               headerStyle: {
                 backgroundColor: "#0D1860",
@@ -99,8 +100,6 @@ export default function App() {
                   name="questioncircleo"
                   size={30}
                   color="white"
-
-                  // style={{ marginRight: 20 }}
                 />
               ),
             })}

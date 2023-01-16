@@ -1,7 +1,5 @@
 import { StyleSheet, TextInput, View } from "react-native";
-import { useState, useContext } from "react";
-import { WordleContext } from "../screens/Game";
-
+import { useState } from "react";
 const Cell = ({
   setFilled,
   index,
@@ -10,10 +8,10 @@ const Cell = ({
   rowFilled,
   rowNo,
   color,
+  activeRowIndex,
 }) => {
   const [value, setValue] = useState("");
-  const data = useContext(WordleContext);
-  const activeRowIndex = data.activeRowIndex;
+
   return (
     <View>
       <TextInput
@@ -53,8 +51,6 @@ const styles = StyleSheet.create({
     width: 80,
     textAlign: "center",
     borderRadius: 8,
-
-    // borderRadius: 50,
     marginHorizontal: 2,
   },
 });
