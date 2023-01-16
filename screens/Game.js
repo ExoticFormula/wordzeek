@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Text, View, StyleSheet } from "react-native";
-
 import Row from "../components/Row";
 import axios from "axios";
 import { createContext } from "react";
+import { Audio } from "expo-av";
+import { GlobalContext } from "../App";
 const WordleContext = createContext();
 
-const Game = () => {
+const Game = ({ navigation }) => {
   const [activeRowIndex, setActiveRowIndex] = useState(0);
   const [word, setWord] = useState("");
-
+  const data = useContext(GlobalContext);
   const backupWords = ["pearl", "music", "movie"];
   useEffect(() => {
     axios
@@ -48,24 +49,26 @@ const Game = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "#251F26",
+    // backgroundColor: "#251F26",
+    backgroundColor: "#0D1860",
     alignItems: "center",
     justifyContent: "space-evenly",
   },
   row: {
     flexDirection: "row",
     marginTop: 5,
-    gap: 5,
     paddingHorizontal: -2,
   },
   title: {
     fontSize: 35,
-    color: "#fc4747",
+    color: "#F1930D",
     fontWeight: "bold",
-    marginBottom: 10,
   },
   container: {
     alignItems: "center",
+  },
+  grid: {
+    marginTop: 25,
   },
 });
 

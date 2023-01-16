@@ -31,12 +31,12 @@ const Row = ({ rowNo }) => {
 
     for (let i = 0; i <= 4; i++) {
       if (currentWord[i] === correctWord[i]) {
-        newColors.push("#6A9948");
+        newColors.push("#F1930D");
       } else if (correctWord.includes(currentWord[i])) {
         newColors.push("#6860A2");
       } else newColors.push("#3C373D");
 
-      const isCorrect = newColors.every((color) => color === "#6A9948");
+      const isCorrect = newColors.every((color) => color === "#F1930D");
       if (isCorrect) showToast("You Won!");
       updateCellColor(newColors);
     }
@@ -53,27 +53,27 @@ const Row = ({ rowNo }) => {
     {
       index: 0,
       filled: false,
-      color: "#00695C",
+      color: "#5A6493",
     },
     {
       index: 1,
       filled: false,
-      color: "#00695C",
+      color: "#5A6493",
     },
     {
       index: 2,
       filled: false,
-      color: "#00695C",
+      color: "#5A6493",
     },
     {
       index: 3,
       filled: false,
-      color: "#00695C",
+      color: "#5A6493",
     },
     {
       index: 4,
       filled: false,
-      color: "#00695C",
+      color: "#5A6493",
     },
   ]);
 

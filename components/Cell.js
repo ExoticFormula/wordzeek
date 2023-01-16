@@ -47,12 +47,14 @@ const Cell = ({
 };
 const styles = StyleSheet.create({
   cell: {
-    height: 60,
-    outlineStyle: "none",
+    height: 80,
+    outlineStyle: "white",
     color: "white",
-    width: 60,
+    width: 80,
     textAlign: "center",
-    borderRadius: 50,
+    borderRadius: 8,
+
+    // borderRadius: 50,
     marginHorizontal: 2,
   },
 });

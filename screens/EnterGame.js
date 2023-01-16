@@ -1,28 +1,60 @@
-import { Button } from "react-native";
-import { StyleSheet, View } from "react-native";
-
+import {
+  StyleSheet,
+  View,
+  ImageBackground,
+  TouchableOpacity,
+  Text,
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { useContext } from "react";
+import { GlobalContext } from "../App";
 const EnterGame = ({ navigation }) => {
+  const data = useContext(GlobalContext);
+
   return (
-    <View style={styles.wrapper}>
-      <Button
-        style={styles.button}
-        onPress={() => navigation.navigate("Game")}
-        title="Enter Game"
-      ></Button>
-    </View>
+    <ImageBackground
+      source={require("../assets/background.png")}
+      style={{ width: "100%", height: "100%" }}
+    >
+      <View style={styles.wrapper}>
+        <Feather
+          style={{
+            position: "absolute",
+            top: "10%",
+            right: 40,
+          }}
+          name={data.musicOn ? "volume-x" : "volume-2"}
+          size={35}
+          color="white"
+          onPress={() => {
+            data.toggleSound();
+          }}
+        />
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Game")}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Enter Game</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: "#251F26",
     alignItems: "center",
     justifyContent: "center",
   },
   button: {
-    borderRadius: 30,
+    borderRadius: 10,
     paddingVertical: 10,
+    backgroundColor: "dodgerblue",
     paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  buttonText: {
+    color: "white",
   },
 });
 
