@@ -1,13 +1,13 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useEffect, useState, createContext } from "react";
-import Lobby from "./screens/Lobby";
-import Game from "./screens/Game";
-import Guide from "./screens/Guide";
 import { Audio } from "expo-av";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { Text } from "react-native";
-import { GlobalContext } from "./GlobalContext";
+import { GlobalContext } from "./utils/GlobalContext";
+import Lobby from "./screens/Lobby";
+import Game from "./screens/Game";
+import Guide from "./screens/Guide";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -26,7 +26,7 @@ export default function App() {
 
   async function fetchAndPlaySound() {
     const { sound } = await Audio.Sound.createAsync(
-      require("./assets/lobby.mp3")
+      require("./assets/audios/lobby.mp3")
     );
     setSound(sound);
 
@@ -126,7 +126,7 @@ export default function App() {
 
               headerRight: () => (
                 <AntDesign
-                  name="closesquareo"
+                  name="closecircleo"
                   size={30}
                   color="white"
                   onPress={() => {

@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useContext } from "react";
-import { GlobalContext } from "../GlobalContext";
+import { GlobalContext } from "../utils/GlobalContext";
 
 const EnterGame = ({ navigation }) => {
   const data = useContext(GlobalContext);
@@ -15,7 +15,7 @@ const EnterGame = ({ navigation }) => {
   return (
     <ImageBackground
       source={require("../assets/background.png")}
-      style={{ width: "100%", height: "100%" }}
+      style={styles.backgroundImage}
     >
       <View style={styles.wrapper}>
         <Feather
@@ -46,6 +46,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  backgroundImage: {
+    width: "100%",
+    height: "100%",
   },
   button: {
     borderRadius: 10,
