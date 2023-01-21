@@ -11,22 +11,22 @@ const Game = ({ navigation }) => {
   const [word, setWord] = useState("");
   const backupWords = ["pearl", "music", "movie"];
 
-  const updateCellColor = (rowNo, newColors) => {
-    const updatedRowState = rowStates[rowNo].map((cell, index) => {
+  const updateCellColor = (rowIndex, newColors) => {
+    const updatedRowState = rowStates[rowIndex].map((cell, index) => {
       return { ...cell, color: newColors[index] };
     });
     let updatedRowStates = [...rowStates];
-    updatedRowStates[rowNo] = updatedRowState;
+    updatedRowStates[rowIndex] = updatedRowState;
     setRowStates(updatedRowStates);
   };
 
-  const setFilled = (rowNo, index, filled) => {
-    const updatedRowState = rowStates[rowNo].map((cell) => {
+  const setFilled = (rowIndex, index, filled) => {
+    const updatedRowState = rowStates[rowIndex].map((cell) => {
       if (index === cell.index) return { ...cell, filled };
       return cell;
     });
     let updatedRowStates = [...rowStates];
-    updatedRowStates[rowNo] = updatedRowState;
+    updatedRowStates[rowIndex] = updatedRowState;
     setRowStates(updatedRowStates);
   };
 
@@ -55,7 +55,7 @@ const Game = ({ navigation }) => {
                 key={index}
                 word={word}
                 activeRowIndex={activeRowIndex}
-                rowNo={index}
+                rowIndex={index}
                 setActiveRowIndex={setActiveRowIndex}
                 rowState={rowStates[index]}
                 updateCellColor={updateCellColor}

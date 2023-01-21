@@ -4,7 +4,7 @@ import Cell from "./Cell";
 
 const Row = ({
   rowState,
-  rowNo,
+  rowIndex,
   activeRowIndex,
   setActiveRowIndex,
   word,
@@ -24,7 +24,7 @@ const Row = ({
 
   // jumping to next row not wokring as expected
   // useEffect(() => {
-  //   if (rowNo === activeRowIndex) cellRefs[0].current.focus();
+  //   if (rowIndex === activeRowIndex) cellRefs[0].current.focus();
   // }, [activeRowIndex]);
 
   const focusCell = (refIndex) => {
@@ -44,11 +44,11 @@ const Row = ({
       } else if (word.includes(currentWord[i])) {
         newColors.push("#6860A2");
       } else newColors.push("#3C373D");
-
-      const isCorrect = newColors.every((color) => color === "#F1930D");
-      if (isCorrect) showToast("You Won!");
-      updateCellColor(rowNo, newColors);
     }
+
+    const isCorrect = newColors.every((color) => color === "#F1930D");
+    if (isCorrect) showToast("You Won!");
+    updateCellColor(rowIndex, newColors);
   };
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const Row = ({
 
       if (rowFilled) {
         setRowFilled(true);
-        setActiveRowIndex(rowNo + 1);
+        setActiveRowIndex(rowIndex + 1);
         let word = "";
         setCurrentWord(word);
 
@@ -78,12 +78,12 @@ const Row = ({
             rowFilled={rowFilled}
             activeRowIndex={activeRowIndex}
             innerRef={cellRefs[index]}
-            focusCell = {focusCell}
+            focusCell={focusCell}
             setFilled={setFilled}
             key={index}
             color={cell.color}
-            index={index}
-            rowNo={rowNo}
+            cellIndex={index}
+            rowIndex={rowIndex}
           ></Cell>
         );
       })}
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     gap: 5,
     paddingHorizontal: -2,
   },
-  rowNo: {
+  rowIndex: {
     color: "#fc4747",
   },
 });

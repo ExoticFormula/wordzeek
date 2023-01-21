@@ -10,7 +10,7 @@ import Game from "./screens/Game";
 import Guide from "./screens/Guide";
 const Stack = createNativeStackNavigator();
 
-export default function App() {
+const App = () => {
   const [musicOn, setMusicOn] = useState(false);
   const [sound, setSound] = useState();
 
@@ -26,7 +26,7 @@ export default function App() {
 
   async function fetchAndPlaySound() {
     const { sound } = await Audio.Sound.createAsync(
-      require("./assets/audios/lobby.mp3")
+      require("./assets/audios/game.mp3")
     );
     setSound(sound);
 
@@ -140,6 +140,7 @@ export default function App() {
       </NavigationContainer>
     </GlobalContext.Provider>
   );
-}
+};
 
 export { GlobalContext };
+export default App;
