@@ -1,12 +1,19 @@
-import { useEffect, useState } from "react";
-import { Text, View, StyleSheet, ToastAndroid } from "react-native";
+import { useEffect, useState, useFocusEffect, useCallback } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ToastAndroid,
+  BackHandler,
+  Alert,
+} from "react-native";
 import Row from "../components/Row";
 import initialRowStates from "../utils/initialRowStates";
 import axios from "axios";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Spinner from "react-native-loading-spinner-overlay";
 
-const Game = () => {
+const Game = ({ navigation }) => {
   const [gameState, setGameState] = useState("ONGOING");
   const [rowStates, setRowStates] = useState(initialRowStates);
   const [title, setTitle] = useState("WORDZEEK");
@@ -20,10 +27,49 @@ const Game = () => {
   }, []);
 
   useEffect(() => {
-    const gameLost = rowStates.every((rowState) => rowState.rowFilled);
-    console.log(gameLost);
+    const gameWon = rowStates.some((rowState) => rowState.solved);
+    if (gameWon) {
+      setTitle("YOU WON!");
+      setGameState("WON");
+      return;
+    } else {
+      const allRowsFilled = rowStates.every((rowState) => rowState.rowFilled);
+      if (allRowsFilled && gameState !== "WON") {
+        console.log("hi");
+
+        setGameState("LOST");
+        setTitle("You Lost :(");
+        return;
+      }
+    }
   }, [rowStates]);
 
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => navigation.navigate('Lobby')},
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  const setSolved = (rowIndex) => {
+    const updatedRowStates = [...rowStates];
+    updatedRowStates[rowIndex].solved = true;
+    setRowStates(updatedRowStates);
+  };
   const getWord = () => {
     setLoading(true);
     axios
@@ -39,6 +85,7 @@ const Game = () => {
         setLoading(false);
       });
   };
+
   const updateCellColor = (rowIndex, newColors) => {
     const updatedRowState = rowStates[rowIndex].rowState.map((cell, index) => {
       return { ...cell, color: newColors[index] };
@@ -97,7 +144,10 @@ const Game = () => {
                 setFilled={setFilled}
                 showToast={showToast}
                 checkGameState={checkGameState}
+                rowFilled={rowStates[index].rowFilled}
                 setRowFilled={setRowFilled}
+                setSolved={setSolved}
+                gameState={gameState}
               ></Row>
             );
           })}

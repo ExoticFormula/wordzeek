@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View} from "react-native";
 import { useState } from "react";
 const Cell = ({
   setFilled,
@@ -9,14 +9,19 @@ const Cell = ({
   color,
   activeRowIndex,
   focusCell,
+  gameState,
 }) => {
   const [value, setValue] = useState("");
 
   return (
     <View>
       <TextInput
-        editable={!rowFilled && rowIndex === activeRowIndex}
-        selectTextOnFocus={!rowFilled && rowIndex === activeRowIndex}
+        editable={
+          !rowFilled && rowIndex === activeRowIndex && gameState === "ONGOING"
+        }
+        selectTextOnFocus={
+          !rowFilled && rowIndex === activeRowIndex && gameState === "ONGOING"
+        }
         maxLength={1}
         ref={innerRef}
         style={{ ...styles.cell, backgroundColor: color }}

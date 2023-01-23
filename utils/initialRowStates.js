@@ -2,6 +2,7 @@
 const initialRowStates = [
   {
     rowFilled: false,
+    solved:false,
     rowState: [
       {
         index: 0,

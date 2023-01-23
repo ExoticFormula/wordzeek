@@ -12,7 +12,10 @@ const Row = ({
   setFilled,
   showToast,
   checkGameState,
-  setRowFilled
+  setRowFilled,
+  setSolved,
+  rowFilled,
+  gameState
 }) => {
   const [currentWord, setCurrentWord] = useState(null);
   // const [rowFilled, setRowFilled] = useState(false);
@@ -46,7 +49,11 @@ const Row = ({
     }
 
     const isCorrect = newColors.every((color) => color === "#F1930D");
-    if (isCorrect) showToast("You Won!");
+    if (isCorrect) {
+      showToast("You Won!");
+      setSolved(rowIndex);
+    }
+
     updateCellColor(rowIndex, newColors);
   };
 
@@ -55,7 +62,7 @@ const Row = ({
       const rowFilled = rowState.every((cell) => cell.filled);
       checkGameState();
       if (rowFilled) {
-        setRowFilled(true);
+        setRowFilled(rowIndex);
         setActiveRowIndex(rowIndex + 1);
         let word = "";
         setCurrentWord(word);
@@ -63,7 +70,6 @@ const Row = ({
         cellRefs.forEach((cellRef) => {
           word += cellRef.current.value;
         });
-        
 
         compareWords(word.toLowerCase());
       }
@@ -84,6 +90,7 @@ const Row = ({
             color={cell.color}
             cellIndex={index}
             rowIndex={rowIndex}
+            gameState= {gameState}
           ></Cell>
         );
       })}
