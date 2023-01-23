@@ -9,7 +9,6 @@ const Cell = ({
   color,
   activeRowIndex,
   focusCell,
-
 }) => {
   const [value, setValue] = useState("");
 
@@ -27,7 +26,6 @@ const Cell = ({
 
           if (text && text.length > 0) {
             setFilled(rowIndex, cellIndex, true);
-            console.log(cellIndex);
             if (cellIndex < 4) focusCell(cellIndex + 1);
           } else {
             setFilled(rowIndex, cellIndex, false);

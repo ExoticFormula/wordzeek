@@ -76,13 +76,10 @@ const App = () => {
             component={Game}
             options={({ navigation }) => ({
               title: "WORDZEEK",
-
               headerStyle: {
                 backgroundColor: "#0D1860",
               },
-
               headerTintColor: "#FFF",
-
               headerTitle: () => (
                 <Feather
                   name={musicOn ? "volume-x" : "volume-2"}

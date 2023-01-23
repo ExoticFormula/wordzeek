@@ -10,9 +10,12 @@ const Row = ({
   word,
   updateCellColor,
   setFilled,
+  showToast,
+  checkGameState,
+  setRowFilled
 }) => {
   const [currentWord, setCurrentWord] = useState(null);
-  const [rowFilled, setRowFilled] = useState(false);
+  // const [rowFilled, setRowFilled] = useState(false);
 
   const cellRefs = [
     useRef(null),
@@ -29,10 +32,6 @@ const Row = ({
 
   const focusCell = (refIndex) => {
     cellRefs[refIndex].current.focus();
-  };
-
-  const showToast = (text) => {
-    ToastAndroid.show(text, ToastAndroid.SHORT);
   };
 
   const compareWords = (currentWord) => {
@@ -54,7 +53,7 @@ const Row = ({
   useEffect(() => {
     if (!rowFilled) {
       const rowFilled = rowState.every((cell) => cell.filled);
-
+      checkGameState();
       if (rowFilled) {
         setRowFilled(true);
         setActiveRowIndex(rowIndex + 1);
@@ -64,6 +63,7 @@ const Row = ({
         cellRefs.forEach((cellRef) => {
           word += cellRef.current.value;
         });
+        
 
         compareWords(word.toLowerCase());
       }

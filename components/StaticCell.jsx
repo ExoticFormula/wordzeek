@@ -1,6 +1,6 @@
 import { StyleSheet, TextInput, View } from "react-native";
 
-const StaticCell = ({ value ,backgroundColor}) => {
+const StaticCell = ({ value, backgroundColor }) => {
   return (
     <View>
       <TextInput

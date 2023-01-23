@@ -1,5 +1,8 @@
+//move rowFilled state to here
 const initialRowStates = [
-    [
+  {
+    rowFilled: false,
+    rowState: [
       {
         index: 0,
         filled: false,
@@ -26,7 +29,10 @@ const initialRowStates = [
         color: "#5A6493",
       },
     ],
-    [
+  },
+  {
+    rowFilled: false,
+    rowState: [
       {
         index: 0,
         filled: false,
@@ -53,7 +59,10 @@ const initialRowStates = [
         color: "#5A6493",
       },
     ],
-    [
+  },
+  {
+    rowFilled: false,
+    rowState: [
       {
         index: 0,
         filled: false,
@@ -80,7 +89,10 @@ const initialRowStates = [
         color: "#5A6493",
       },
     ],
-    [
+  },
+  {
+    rowFilled: false,
+    rowState: [
       {
         index: 0,
         filled: false,
@@ -107,7 +119,10 @@ const initialRowStates = [
         color: "#5A6493",
       },
     ],
-    [
+  },
+  {
+    rowFilled: false,
+    rowState: [
       {
         index: 0,
         filled: false,
@@ -134,7 +149,10 @@ const initialRowStates = [
         color: "#5A6493",
       },
     ],
-    [
+  },
+  {
+    rowFilled: false,
+    rowState: [
       {
         index: 0,
         filled: false,
@@ -161,6 +179,7 @@ const initialRowStates = [
         color: "#5A6493",
       },
     ],
-  ]
+  },
+];
 
-export default initialRowStates
+export default initialRowStates;
