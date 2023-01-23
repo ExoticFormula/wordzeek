@@ -10,8 +10,9 @@ const Cell = ({
   activeRowIndex,
   focusCell,
   gameState,
+  value,
+  setCellValue
 }) => {
-  const [value, setValue] = useState("");
 
   return (
     <View>
@@ -36,11 +37,12 @@ const Cell = ({
             setFilled(rowIndex, cellIndex, false);
             if (cellIndex > 0 && cellIndex < 4) focusCell(cellIndex - 1);
           }
-          setValue(text.toUpperCase());
+          setCellValue(rowIndex,cellIndex,text.toUpperCase)
+        
         }}
         onKeyPress={({ nativeEvent }) => {
           if (nativeEvent.key === "Backspace") {
-            setValue("");
+            setCellValue(rowIndex,cellIndex,"");
             if (cellIndex > 0 && cellIndex < 5) focusCell(cellIndex - 1);
           }
         }}

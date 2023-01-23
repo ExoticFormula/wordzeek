@@ -1,21 +1,14 @@
-import { useEffect, useState, useFocusEffect, useCallback } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  ToastAndroid,
-  BackHandler,
-  Alert,
-} from "react-native";
+import { useEffect, useState } from "react";
+import { Text, View, StyleSheet, BackHandler, Alert } from "react-native";
 import Row from "../components/Row";
-import initialRowStates from "../utils/initialRowStates";
+import getInitialRowStates from "../utils/getInitialRowStates";
 import axios from "axios";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Spinner from "react-native-loading-spinner-overlay";
 
 const Game = ({ navigation }) => {
   const [gameState, setGameState] = useState("ONGOING");
-  const [rowStates, setRowStates] = useState(initialRowStates);
+  const [rowStates, setRowStates] = useState(getInitialRowStates());
   const [title, setTitle] = useState("WORDZEEK");
   const [activeRowIndex, setActiveRowIndex] = useState(0);
   const [word, setWord] = useState("");
@@ -46,13 +39,13 @@ const Game = ({ navigation }) => {
 
   useEffect(() => {
     const backAction = () => {
-      Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+      Alert.alert("Hold on!", "Current progress will be lost! go back?", [
         {
-          text: 'Cancel',
+          text: "Cancel",
           onPress: () => null,
-          style: 'cancel',
+          style: "cancel",
         },
-        {text: 'YES', onPress: () => navigation.navigate('Lobby')},
+        { text: "YES", onPress: () => navigation.navigate("Lobby") },
       ]);
       return true;
     };
@@ -64,6 +57,14 @@ const Game = ({ navigation }) => {
 
     return () => backHandler.remove();
   }, []);
+
+  const setCellValue = (rowIndex, cellIndex, value) => {
+    const updatedRowStates = [...rowStates];
+
+    updatedRowStates[rowIndex].rowState[cellIndex].value = value;
+    setRowStates(updatedRowStates);
+  };
+
 
   const setSolved = (rowIndex) => {
     const updatedRowStates = [...rowStates];
@@ -95,10 +96,6 @@ const Game = ({ navigation }) => {
     setRowStates(updatedRowStates);
   };
 
-  const showToast = (text) => {
-    ToastAndroid.show(text, ToastAndroid.SHORT);
-  };
-
   const setRowFilled = (rowIndex) => {
     const updatedRowStates = [...rowStates];
     updatedRowStates[rowIndex].rowFilled = true;
@@ -116,13 +113,9 @@ const Game = ({ navigation }) => {
   };
 
   const resetGame = () => {
+    setGameState("ONGOING");
+    setRowStates(getInitialRowStates());
     getWord();
-    setRowStates([...initialRowStates]);
-  };
-
-  const checkGameState = () => {
-    let gameLost = rowStates.forEach((rowState) => rowState.rowFilled);
-    if (gameLost && !gameState === "WON") showToast("Game lost :(");
   };
 
   return (
@@ -142,11 +135,10 @@ const Game = ({ navigation }) => {
                 rowState={rowStates[index].rowState}
                 updateCellColor={updateCellColor}
                 setFilled={setFilled}
-                showToast={showToast}
-                checkGameState={checkGameState}
                 rowFilled={rowStates[index].rowFilled}
                 setRowFilled={setRowFilled}
                 setSolved={setSolved}
+                setCellValue={setCellValue}
                 gameState={gameState}
               ></Row>
             );

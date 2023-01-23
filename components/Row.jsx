@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { StyleSheet, View, ToastAndroid } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Cell from "./Cell";
 
 const Row = ({
@@ -10,16 +10,13 @@ const Row = ({
   word,
   updateCellColor,
   setFilled,
-  showToast,
-  checkGameState,
   setRowFilled,
   setSolved,
   rowFilled,
-  gameState
+  gameState,
+  setCellValue
 }) => {
   const [currentWord, setCurrentWord] = useState(null);
-  // const [rowFilled, setRowFilled] = useState(false);
-
   const cellRefs = [
     useRef(null),
     useRef(null),
@@ -50,7 +47,6 @@ const Row = ({
 
     const isCorrect = newColors.every((color) => color === "#F1930D");
     if (isCorrect) {
-      showToast("You Won!");
       setSolved(rowIndex);
     }
 
@@ -60,7 +56,7 @@ const Row = ({
   useEffect(() => {
     if (!rowFilled) {
       const rowFilled = rowState.every((cell) => cell.filled);
-      checkGameState();
+
       if (rowFilled) {
         setRowFilled(rowIndex);
         setActiveRowIndex(rowIndex + 1);
@@ -90,7 +86,9 @@ const Row = ({
             color={cell.color}
             cellIndex={index}
             rowIndex={rowIndex}
-            gameState= {gameState}
+            gameState={gameState}
+            value = {rowState[index].value}
+            setCellValue= {setCellValue}
           ></Cell>
         );
       })}
