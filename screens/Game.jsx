@@ -28,10 +28,8 @@ const Game = ({ navigation }) => {
     } else {
       const allRowsFilled = rowStates.every((rowState) => rowState.rowFilled);
       if (allRowsFilled && gameState !== "WON") {
-        console.log("hi");
-
+        setTitle("YOU LOST :(");
         setGameState("LOST");
-        setTitle("You Lost :(");
         return;
       }
     }
@@ -58,19 +56,28 @@ const Game = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
 
+  // jumping focus to next row first cell not working fix this.
+  useEffect(() => {
+    console.log(activeRowIndex);
+    focusCell(activeRowIndex, 0);
+  }, [activeRowIndex]);
+
   const setCellValue = (rowIndex, cellIndex, value) => {
     const updatedRowStates = [...rowStates];
-
     updatedRowStates[rowIndex].rowState[cellIndex].value = value;
     setRowStates(updatedRowStates);
   };
-
 
   const setSolved = (rowIndex) => {
     const updatedRowStates = [...rowStates];
     updatedRowStates[rowIndex].solved = true;
     setRowStates(updatedRowStates);
   };
+
+  const focusCell = (rowIndex, cellIndex) => {
+    rowStates[rowIndex].cellRefs[cellIndex].current.focus();
+  };
+
   const getWord = () => {
     setLoading(true);
     axios
@@ -102,9 +109,9 @@ const Game = ({ navigation }) => {
     setRowStates(updatedRowStates);
   };
 
-  const setFilled = (rowIndex, index, filled) => {
+  const setCellFilled = (rowIndex, cellIndex, filled) => {
     const updatedRowState = rowStates[rowIndex].rowState.map((cell) => {
-      if (index === cell.index) return { ...cell, filled };
+      if (cellIndex === cell.index) return { ...cell, filled };
       return cell;
     });
     let updatedRowStates = [...rowStates];
@@ -131,11 +138,13 @@ const Game = ({ navigation }) => {
                 word={word}
                 activeRowIndex={activeRowIndex}
                 rowIndex={index}
+                focusCell={focusCell}
                 setActiveRowIndex={setActiveRowIndex}
                 rowState={rowStates[index].rowState}
                 updateCellColor={updateCellColor}
-                setFilled={setFilled}
+                setCellFilled={setCellFilled}
                 rowFilled={rowStates[index].rowFilled}
+                cellRefs={rowStates[index].cellRefs}
                 setRowFilled={setRowFilled}
                 setSolved={setSolved}
                 setCellValue={setCellValue}

@@ -9,30 +9,18 @@ const Row = ({
   setActiveRowIndex,
   word,
   updateCellColor,
-  setFilled,
+  setCellFilled,
   setRowFilled,
   setSolved,
   rowFilled,
   gameState,
-  setCellValue
+  setCellValue,
+  cellRefs,
+  focusCell
 }) => {
   const [currentWord, setCurrentWord] = useState(null);
-  const cellRefs = [
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-  ];
 
-  // jumping to next row not wokring as expected
-  // useEffect(() => {
-  //   if (rowIndex === activeRowIndex) cellRefs[0].current.focus();
-  // }, [activeRowIndex]);
-
-  const focusCell = (refIndex) => {
-    cellRefs[refIndex].current.focus();
-  };
+  
 
   const compareWords = (currentWord) => {
     const newColors = [];
@@ -49,24 +37,20 @@ const Row = ({
     if (isCorrect) {
       setSolved(rowIndex);
     }
-
     updateCellColor(rowIndex, newColors);
   };
 
   useEffect(() => {
     if (!rowFilled) {
       const rowFilled = rowState.every((cell) => cell.filled);
-
       if (rowFilled) {
         setRowFilled(rowIndex);
         setActiveRowIndex(rowIndex + 1);
         let word = "";
         setCurrentWord(word);
-
         cellRefs.forEach((cellRef) => {
           word += cellRef.current.value;
         });
-
         compareWords(word.toLowerCase());
       }
     }
@@ -81,14 +65,14 @@ const Row = ({
             activeRowIndex={activeRowIndex}
             innerRef={cellRefs[index]}
             focusCell={focusCell}
-            setFilled={setFilled}
+            setCellFilled={setCellFilled}
             key={index}
             color={cell.color}
             cellIndex={index}
             rowIndex={rowIndex}
             gameState={gameState}
-            value = {rowState[index].value}
-            setCellValue= {setCellValue}
+            value={rowState[index].value}
+            setCellValue={setCellValue}
           ></Cell>
         );
       })}
@@ -101,9 +85,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     gap: 5,
     paddingHorizontal: -2,
-  },
-  rowIndex: {
-    color: "#fc4747",
   },
 });
 

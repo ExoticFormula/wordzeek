@@ -1,6 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useEffect, useState, createContext } from "react";
+import { useEffect, useState } from "react";
 import { Audio } from "expo-av";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { Text } from "react-native";
@@ -8,11 +8,21 @@ import { GlobalContext } from "./utils/GlobalContext";
 import Lobby from "./screens/Lobby";
 import Game from "./screens/Game";
 import Guide from "./screens/Guide";
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   const [musicOn, setMusicOn] = useState(false);
   const [sound, setSound] = useState();
+  async function fetchAndPlaySound() {
+    const { sound } = await Audio.Sound.createAsync(
+      require("./assets/audios/game.mp3")
+    );
+    setSound(sound);
+
+    await sound.playAsync();
+    setMusicOn(true);
+  }
 
   async function toggleSound() {
     if (musicOn) {
@@ -24,15 +34,6 @@ const App = () => {
     }
   }
 
-  async function fetchAndPlaySound() {
-    const { sound } = await Audio.Sound.createAsync(
-      require("./assets/audios/game.mp3")
-    );
-    setSound(sound);
-
-    await sound.playAsync();
-    setMusicOn(true);
-  }
 
   useEffect(() => {
     fetchAndPlaySound();

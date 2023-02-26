@@ -1,7 +1,9 @@
-import { StyleSheet, TextInput, View} from "react-native";
-import { useState } from "react";
+import { StyleSheet, TextInput, View } from "react-native";
+import { Audio } from "expo-av";
+import { useEffect, useState } from "react";
+
 const Cell = ({
-  setFilled,
+  setCellFilled,
   cellIndex,
   innerRef,
   rowFilled,
@@ -11,9 +13,23 @@ const Cell = ({
   focusCell,
   gameState,
   value,
-  setCellValue
+  setCellValue,
 }) => {
-
+  const [inputSound, setInputSound] = useState(null);
+  const [editable, setEditable] = useState(false);
+  async function fetchSounds() {
+    const { sound } = await Audio.Sound.createAsync(
+      require("../assets/audios/input.mp3")
+    );
+    setInputSound(sound);
+  }
+  async function playSound(sound) {
+    await sound.pauseAsync();
+    await sound.playAsync();
+  }
+  useEffect(() => {
+    fetchSounds();
+  }, []);
   return (
     <View>
       <TextInput
@@ -27,23 +43,23 @@ const Cell = ({
         ref={innerRef}
         style={{ ...styles.cell, backgroundColor: color }}
         value={value}
-        onChangeText={(text) => {
+        onChangeText={async (text) => {
+          playSound(inputSound);
           if (innerRef.current) innerRef.current.value = text;
 
           if (text && text.length > 0) {
-            setFilled(rowIndex, cellIndex, true);
-            if (cellIndex < 4) focusCell(cellIndex + 1);
+            setCellFilled(rowIndex, cellIndex, true);
+            if (cellIndex < 4) focusCell(rowIndex,cellIndex + 1);
           } else {
-            setFilled(rowIndex, cellIndex, false);
-            if (cellIndex > 0 && cellIndex < 4) focusCell(cellIndex - 1);
+            setCellFilled(rowIndex, cellIndex, false);
+            if (cellIndex > 0 && cellIndex < 4) focusCell(rowIndex,cellIndex - 1);
           }
-          setCellValue(rowIndex,cellIndex,text.toUpperCase)
-        
+          setCellValue(rowIndex, cellIndex, text.toUpperCase);
         }}
         onKeyPress={({ nativeEvent }) => {
           if (nativeEvent.key === "Backspace") {
-            setCellValue(rowIndex,cellIndex,"");
-            if (cellIndex > 0 && cellIndex < 5) focusCell(cellIndex - 1);
+            setCellValue(rowIndex, cellIndex, "");
+            if (cellIndex > 0 && cellIndex < 5) focusCell(rowIndex,cellIndex - 1);
           }
         }}
       />

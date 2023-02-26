@@ -19,11 +19,7 @@ const EnterGame = ({ navigation }) => {
     >
       <View style={styles.wrapper}>
         <Feather
-          style={{
-            position: "absolute",
-            top: "10%",
-            right: 40,
-          }}
+          style={styles.volumeIcon}
           name={data.musicOn ? "volume-x" : "volume-2"}
           size={35}
           color="white"
@@ -60,6 +56,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
+  },
+  volumeIcon: {
+    position: "absolute",
+    top: "10%",
+    right: 40,
   },
 });
 
