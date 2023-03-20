@@ -7,6 +7,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Spinner from "react-native-loading-spinner-overlay";
 
 const Game = ({ navigation }) => {
+
   const [gameState, setGameState] = useState("ONGOING");
   const [rowStates, setRowStates] = useState(getInitialRowStates());
   const [title, setTitle] = useState("WORDZEEK");
@@ -56,11 +57,17 @@ const Game = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
 
-  // jumping focus to next row first cell not working fix this.
-  useEffect(() => {
-    console.log(activeRowIndex);
-    focusCell(activeRowIndex, 0);
-  }, [activeRowIndex]);
+  // // jumping focus to next row first cell not working fix this.
+  // useEffect(() => {
+  //   console.log(activeRowIndex);
+  //   focusCell(activeRowIndex, 0);
+  // }, [activeRowIndex]);
+
+  const resetGame = () => {
+    setRowStates(getInitialRowStates());
+    setGameState("ONGOING");
+    getWord();
+  };
 
   const setCellValue = (rowIndex, cellIndex, value) => {
     const updatedRowStates = [...rowStates];
@@ -117,12 +124,6 @@ const Game = ({ navigation }) => {
     let updatedRowStates = [...rowStates];
     updatedRowStates[rowIndex].rowState = updatedRowState;
     setRowStates(updatedRowStates);
-  };
-
-  const resetGame = () => {
-    setGameState("ONGOING");
-    setRowStates(getInitialRowStates());
-    getWord();
   };
 
   return (

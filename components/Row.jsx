@@ -16,11 +16,9 @@ const Row = ({
   gameState,
   setCellValue,
   cellRefs,
-  focusCell
+  focusCell,
 }) => {
   const [currentWord, setCurrentWord] = useState(null);
-
-  
 
   const compareWords = (currentWord) => {
     const newColors = [];

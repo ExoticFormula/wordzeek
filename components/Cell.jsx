@@ -41,6 +41,7 @@ const Cell = ({
         }
         maxLength={1}
         ref={innerRef}
+
         style={{ ...styles.cell, backgroundColor: color }}
         value={value}
         onChangeText={async (text) => {
@@ -49,17 +50,19 @@ const Cell = ({
 
           if (text && text.length > 0) {
             setCellFilled(rowIndex, cellIndex, true);
-            if (cellIndex < 4) focusCell(rowIndex,cellIndex + 1);
+            if (cellIndex < 4) focusCell(rowIndex, cellIndex + 1);
           } else {
             setCellFilled(rowIndex, cellIndex, false);
-            if (cellIndex > 0 && cellIndex < 4) focusCell(rowIndex,cellIndex - 1);
+            if (cellIndex > 0 && cellIndex < 4)
+              focusCell(rowIndex, cellIndex - 1);
           }
           setCellValue(rowIndex, cellIndex, text.toUpperCase);
         }}
         onKeyPress={({ nativeEvent }) => {
           if (nativeEvent.key === "Backspace") {
             setCellValue(rowIndex, cellIndex, "");
-            if (cellIndex > 0 && cellIndex < 5) focusCell(rowIndex,cellIndex - 1);
+            if (cellIndex > 0 && cellIndex < 5)
+              focusCell(rowIndex, cellIndex - 1);
           }
         }}
       />
