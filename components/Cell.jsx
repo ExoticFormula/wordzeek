@@ -1,11 +1,10 @@
-import { StyleSheet, TextInput, View } from "react-native";
 import { Audio } from "expo-av";
 import { useEffect, useState } from "react";
+import { StyleSheet, TextInput, View } from "react-native";
 
 const Cell = ({
   setCellFilled,
   cellIndex,
-  innerRef,
   rowFilled,
   rowIndex,
   color,
@@ -14,6 +13,7 @@ const Cell = ({
   gameState,
   value,
   setCellValue,
+  cellRefs,
 }) => {
   const [inputSound, setInputSound] = useState(null);
   const [editable, setEditable] = useState(false);
@@ -40,26 +40,28 @@ const Cell = ({
           !rowFilled && rowIndex === activeRowIndex && gameState === "ONGOING"
         }
         maxLength={1}
-        ref={innerRef}
-
+        ref={(ref) => {
+          if (ref && !cellRefs.current[rowIndex].includes(ref))
+            cellRefs.current[rowIndex].push(ref);
+        }}
         style={{ ...styles.cell, backgroundColor: color }}
         value={value}
         onChangeText={async (text) => {
           playSound(inputSound);
-          if (innerRef.current) innerRef.current.value = text;
+          if (cellRefs.current[rowIndex][cellIndex])
+            cellRefs.current[rowIndex][cellIndex].value = text;
 
           if (text && text.length > 0) {
             setCellFilled(rowIndex, cellIndex, true);
             if (cellIndex < 4) focusCell(rowIndex, cellIndex + 1);
-          } else {
-            setCellFilled(rowIndex, cellIndex, false);
-            if (cellIndex > 0 && cellIndex < 4)
-              focusCell(rowIndex, cellIndex - 1);
-          }
+
+          } 
           setCellValue(rowIndex, cellIndex, text.toUpperCase);
         }}
         onKeyPress={({ nativeEvent }) => {
           if (nativeEvent.key === "Backspace") {
+            setCellFilled(rowIndex, cellIndex, false);
+
             setCellValue(rowIndex, cellIndex, "");
             if (cellIndex > 0 && cellIndex < 5)
               focusCell(rowIndex, cellIndex - 1);

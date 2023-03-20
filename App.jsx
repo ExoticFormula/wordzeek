@@ -1,13 +1,13 @@
+import { AntDesign, Feather } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
 import { Audio } from "expo-av";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import { Text } from "react-native";
-import { GlobalContext } from "./utils/GlobalContext";
-import Lobby from "./screens/Lobby";
 import Game from "./screens/Game";
 import Guide from "./screens/Guide";
+import Lobby from "./screens/Lobby";
+import { GlobalContext } from "./utils/GlobalContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,7 +33,6 @@ const App = () => {
       setMusicOn(true);
     }
   }
-
 
   useEffect(() => {
     fetchAndPlaySound();

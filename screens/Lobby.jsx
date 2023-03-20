@@ -1,12 +1,12 @@
-import {
-  StyleSheet,
-  View,
-  ImageBackground,
-  TouchableOpacity,
-  Text,
-} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useContext } from "react";
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { GlobalContext } from "../utils/GlobalContext";
 
 const EnterGame = ({ navigation }) => {

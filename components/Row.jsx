@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Cell from "./Cell";
 
@@ -15,8 +15,8 @@ const Row = ({
   rowFilled,
   gameState,
   setCellValue,
-  cellRefs,
   focusCell,
+  cellRefs
 }) => {
   const [currentWord, setCurrentWord] = useState(null);
 
@@ -46,10 +46,12 @@ const Row = ({
         setActiveRowIndex(rowIndex + 1);
         let word = "";
         setCurrentWord(word);
-        cellRefs.forEach((cellRef) => {
-          word += cellRef.current.value;
+        cellRefs.current[rowIndex].forEach((cellRef,i) => {
+          word += cellRef.value;
         });
         compareWords(word.toLowerCase());
+
+
       }
     }
   }, [rowState]);
@@ -61,7 +63,7 @@ const Row = ({
           <Cell
             rowFilled={rowFilled}
             activeRowIndex={activeRowIndex}
-            innerRef={cellRefs[index]}
+            cellRefs = {cellRefs}
             focusCell={focusCell}
             setCellFilled={setCellFilled}
             key={index}

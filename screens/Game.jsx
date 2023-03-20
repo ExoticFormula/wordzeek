@@ -1,40 +1,22 @@
-import { useEffect, useState } from "react";
-import { Text, View, StyleSheet, BackHandler, Alert } from "react-native";
-import Row from "../components/Row";
-import getInitialRowStates from "../utils/getInitialRowStates";
-import axios from "axios";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+import { Alert, BackHandler, StyleSheet, Text, View } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay";
+import Row from "../components/Row";
+import initialState from "../utils/initialState";
 
 const Game = ({ navigation }) => {
-
   const [gameState, setGameState] = useState("ONGOING");
-  const [rowStates, setRowStates] = useState(getInitialRowStates());
+  const [rowStates, setRowStates] = useState(
+    initialState.getInitialRowStates()
+  );
   const [title, setTitle] = useState("WORDZEEK");
   const [activeRowIndex, setActiveRowIndex] = useState(0);
   const [word, setWord] = useState("");
   const backupWords = ["pearl", "music", "movie"];
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    getWord();
-  }, []);
-
-  useEffect(() => {
-    const gameWon = rowStates.some((rowState) => rowState.solved);
-    if (gameWon) {
-      setTitle("YOU WON!");
-      setGameState("WON");
-      return;
-    } else {
-      const allRowsFilled = rowStates.every((rowState) => rowState.rowFilled);
-      if (allRowsFilled && gameState !== "WON") {
-        setTitle("YOU LOST :(");
-        setGameState("LOST");
-        return;
-      }
-    }
-  }, [rowStates]);
+  const cellRefs = useRef(initialState.getInitialRef());
 
   useEffect(() => {
     const backAction = () => {
@@ -57,23 +39,32 @@ const Game = ({ navigation }) => {
     return () => backHandler.remove();
   }, []);
 
-  // // jumping focus to next row first cell not working fix this.
+  useEffect(() => {
+    getWord(5);
+  }, []);
+
+  useEffect(() => {
+    const gameWon = rowStates.some((rowState) => rowState.solved);
+    if (gameWon) {
+      setTitle("YOU WON!");
+      setGameState("WON");
+      return;
+    } else {
+      const allRowsFilled = rowStates.every((rowState) => rowState.rowFilled);
+      if (allRowsFilled && gameState !== "WON") {
+        setTitle("YOU LOST :(");
+        setGameState("LOST");
+        return;
+      }
+    }
+  }, [rowStates]);
+
+  
+  // jumping focus to next row first cell not working fix this.
   // useEffect(() => {
-  //   console.log(activeRowIndex);
+  //   console.log("hit");
   //   focusCell(activeRowIndex, 0);
   // }, [activeRowIndex]);
-
-  const resetGame = () => {
-    setRowStates(getInitialRowStates());
-    setGameState("ONGOING");
-    getWord();
-  };
-
-  const setCellValue = (rowIndex, cellIndex, value) => {
-    const updatedRowStates = [...rowStates];
-    updatedRowStates[rowIndex].rowState[cellIndex].value = value;
-    setRowStates(updatedRowStates);
-  };
 
   const setSolved = (rowIndex) => {
     const updatedRowStates = [...rowStates];
@@ -81,14 +72,10 @@ const Game = ({ navigation }) => {
     setRowStates(updatedRowStates);
   };
 
-  const focusCell = (rowIndex, cellIndex) => {
-    rowStates[rowIndex].cellRefs[cellIndex].current.focus();
-  };
-
-  const getWord = () => {
+  const getWord = (length) => {
     setLoading(true);
     axios
-      .get("https://random-word-api.herokuapp.com/word?length=5")
+      .get(`https://random-word-api.herokuapp.com/word?length=${length}`)
       .then(({ data }) => {
         setWord(data[0]);
         //for now
@@ -99,15 +86,6 @@ const Game = ({ navigation }) => {
         setWord(backupWords[Math.floor(Math.random() * 4)]);
         setLoading(false);
       });
-  };
-
-  const updateCellColor = (rowIndex, newColors) => {
-    const updatedRowState = rowStates[rowIndex].rowState.map((cell, index) => {
-      return { ...cell, color: newColors[index] };
-    });
-    let updatedRowStates = [...rowStates];
-    updatedRowStates[rowIndex].rowState = updatedRowState;
-    setRowStates(updatedRowStates);
   };
 
   const setRowFilled = (rowIndex) => {
@@ -126,6 +104,32 @@ const Game = ({ navigation }) => {
     setRowStates(updatedRowStates);
   };
 
+  const setCellValue = (rowIndex, cellIndex, value) => {
+    const updatedRowStates = [...rowStates];
+    updatedRowStates[rowIndex].rowState[cellIndex].value = value;
+    setRowStates(updatedRowStates);
+  };
+
+  const focusCell = (rowIndex, cellIndex) => {
+    cellRefs.current[rowIndex][cellIndex].focus();
+  };
+
+  const updateCellColor = (rowIndex, newColors) => {
+    const updatedRowState = rowStates[rowIndex].rowState.map((cell, index) => {
+      return { ...cell, color: newColors[index] };
+    });
+    let updatedRowStates = [...rowStates];
+    updatedRowStates[rowIndex].rowState = updatedRowState;
+    setRowStates(updatedRowStates);
+  };
+
+  const resetGame = () => {
+    setRowStates(initialState.getInitialRowStates());
+    setGameState("ONGOING");
+    setActiveRowIndex(0);
+    getWord(5);
+    cellRefs.current = initialState.getInitialRef();
+  };
   return (
     <View style={styles.wrapper}>
       <Spinner visible={loading} textStyle={styles.spinnerTextStyle} />
@@ -145,7 +149,7 @@ const Game = ({ navigation }) => {
                 updateCellColor={updateCellColor}
                 setCellFilled={setCellFilled}
                 rowFilled={rowStates[index].rowFilled}
-                cellRefs={rowStates[index].cellRefs}
+                cellRefs={cellRefs}
                 setRowFilled={setRowFilled}
                 setSolved={setSolved}
                 setCellValue={setCellValue}
